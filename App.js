@@ -1,42 +1,23 @@
-// Impor 'React' dari library React dan komponen-komponen dasar dari React Native.
-import React from "react";
-import { View, StyleSheet } from "react-native";
+// Impor React dan hook useState dari library React.
+import React, { useState } from "react";
 
-// Impor komponen kustom yang telah dibuat: CustomButton dan CustomTextInput.
-import CustomButton from "./src/components/customButton";
-import CustomTextInput from "./src/components/customTextInput";
+// Impor komponen layar utama (Home) dari folder screens.
+import Home from "./src/screens/home";
 
-// Fungsi utama aplikasi kita, 'App'.
-const App = () => (
-  // Gunakan View sebagai container utama dengan gaya yang telah ditentukan.
-  <View style={styles.container}>
-    {/* Komponen CustomButton untuk menampilkan tombol dengan gaya kustom */}
-    <CustomButton
-      backgroundColor="#DDDDDD" // Warna latar belakang tombol.
-      color="#39494F" // Warna teks tombol.
-      text="Custom Button" // Teks yang ditampilkan di tombol.
-      width="100%" // Lebar tombol.
-      onPress={() => {}} // Fungsi yang dipanggil saat tombol ditekan.
-    />
-    {/* Komponen CustomTextInput untuk menampilkan input teks dengan gaya kustom */}
-    <CustomTextInput
-      label="Custom Text" // Label yang ditampilkan di atas input.
-      multiline // Aktifkan input multiline.
-      numberOfLines={2} // Jumlah baris default yang ditampilkan.
-      onChange={() => {}} // Fungsi yang dipanggil saat teks input berubah.
-    />
-  </View>
-);
+// Fungsi utama dari aplikasi kita.
+const App = () => {
+  // Gunakan hook useState untuk menyimpan daftar catatan (noteList).
+  const [noteList, setNoteList] = useState([
+    {
+      id: 1, // ID unik untuk setiap catatan.
+      title: "Note pertama", // Judul catatan.
+      desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry", // Deskripsi catatan.
+    },
+  ]);
 
-// Gaya untuk komponen utama.
-const styles = StyleSheet.create({
-  container: {
-    display: "flex", // Gunakan flexbox untuk layout.
-    flexDirection: "column", // Atur komponen anak secara vertikal.
-    justifyContent: "center", // Pusatkan komponen anak secara vertikal.
-    padding: 40, // Beri padding di sekitar container.
-  },
-});
+  // Render komponen Home dengan mengirimkan noteList sebagai properti.
+  return <Home noteList={noteList} />;
+};
 
-// Ekspor komponen 'App' sebagai default export dari file ini.
+// Ekspor komponen App sebagai default export dari file ini.
 export default App;
