@@ -5,8 +5,9 @@ import { FlatList, StyleSheet, View, Text } from "react-native";
 // Impor komponen kustom untuk tombol dari folder components.
 import CustomButton from "../components/customButton";
 
-// Komponen NoteCard untuk menampilkan masing-masing catatan.
-const NoteCard = ({ item }) => (
+// Komponen untuk menampilkan setiap catatan dalam bentuk kartu (card)
+// Ditambahkan prop 'setCurrentPage' untuk navigasi halaman.
+const NoteCard = ({ item, setCurrentPage }) => (
   <View style={styles.card}>
     {/* Menampilkan judul catatan */}
     <Text style={styles.cardTitle}>{item.title}</Text>
@@ -21,7 +22,10 @@ const NoteCard = ({ item }) => (
         text="Ubah" // Teks yang ditampilkan pada tombol.
         fontSize={12} // Ukuran teks tombol.
         width={100} // Lebar tombol.
-        onPress={() => {}} // Fungsi yang dipanggil saat tombol ditekan.
+        // Pindah ke halaman "edit" saat tombol ditekan
+        onPress={() => {
+          setCurrentPage("edit");
+        }}
       />
       {/* Tombol untuk menghapus catatan */}
       <CustomButton
@@ -30,14 +34,15 @@ const NoteCard = ({ item }) => (
         text="Hapus" // Teks yang ditampilkan pada tombol.
         fontSize={12} // Ukuran teks tombol.
         width={100} // Lebar tombol.
-        onPress={() => {}} // Fungsi yang dipanggil saat tombol ditekan.
+        onPress={() => {}} // Fungsi yang dipanggil saat tombol ditekan (belum diimplementasikan).
       />
     </View>
   </View>
 );
 
-// Komponen utama Home untuk menampilkan daftar catatan dan tombol untuk menambah catatan.
-const Home = ({ noteList }) => (
+// Komponen utama Home untuk menampilkan daftar catatan dan tombol untuk menambah catatan
+// Ditambahkan prop 'setCurrentPage' untuk navigasi halaman.
+const Home = ({ noteList, setCurrentPage }) => (
   <View style={styles.container}>
     {/* Tombol untuk menambah catatan baru */}
     <CustomButton
@@ -45,14 +50,20 @@ const Home = ({ noteList }) => (
       color="#203239" // Warna teks tombol tambah.
       text="Tambahkan Note" // Teks yang ditampilkan pada tombol.
       width="100%" // Lebar tombol.
-      onPress={() => {}} // Fungsi yang dipanggil saat tombol ditekan.
+      // Pindah ke halaman "add" saat tombol ditekan
+      onPress={() => {
+        setCurrentPage("add");
+      }}
     />
     {/* Daftar catatan yang ditampilkan menggunakan FlatList */}
     <FlatList
       showsVerticalScrollIndicator={false} // Hilangkan indikator gulir vertikal.
       data={noteList} // Sumber data untuk FlatList, diambil dari prop noteList.
-      renderItem={NoteCard} // Fungsi yang digunakan untuk merender setiap item dalam daftar.
-      keyExtractor={(item) => item.id.toString()} // Kunci unik untuk setiap item, diambil dari properti id dan diubah menjadi string.
+      // Berikan function "setCurrentPage" ke komponen "NoteCard"
+      renderItem={({ item }) => (
+        <NoteCard item={item} setCurrentPage={setCurrentPage} />
+      )}
+      keyExtractor={(item) => item.id.toString()} // Kunci unik untuk setiap item, diambil dari properti id.
     />
   </View>
 );
