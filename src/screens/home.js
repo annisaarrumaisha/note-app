@@ -6,7 +6,8 @@ import { FlatList, StyleSheet, View, Text } from "react-native";
 import CustomButton from "../components/customButton";
 
 // Komponen NoteCard untuk menampilkan informasi catatan dan tombol aksi
-const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
+const NoteCard = ({ item, setCurrentPage, deleteNote, setEditingNote }) => (
+  // Setiap catatan ditampilkan dalam sebuah View dengan gaya 'card'
   <View style={styles.card}>
     {/* Tampilkan judul catatan */}
     <Text style={styles.cardTitle}>{item.title}</Text>
@@ -20,8 +21,9 @@ const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
         text="Ubah" // Teks tombol
         fontSize={12} // Ukuran teks
         width={100} // Lebar tombol
-        // Ubah halaman ke "edit" ketika tombol ditekan
+        // Saat tombol "Ubah" diklik, setel catatan yang akan diedit dan alihkan ke halaman edit
         onPress={() => {
+          setEditingNote(item);
           setCurrentPage("edit");
         }}
       />
@@ -39,8 +41,9 @@ const NoteCard = ({ item, setCurrentPage, deleteNote }) => (
   </View>
 );
 
-// Komponen Home untuk menampilkan daftar catatan
-const Home = ({ noteList, setCurrentPage, deleteNote }) => (
+// Komponen utama untuk halaman Home yang menampilkan daftar catatan
+const Home = ({ noteList, setCurrentPage, deleteNote, setEditingNote }) => (
+  // View utama untuk halaman Home
   <View style={styles.container}>
     {/* Tombol untuk menambahkan catatan baru */}
     <CustomButton
@@ -63,6 +66,7 @@ const Home = ({ noteList, setCurrentPage, deleteNote }) => (
           item={item} // Data catatan
           setCurrentPage={setCurrentPage} // Fungsi untuk mengubah halaman
           deleteNote={deleteNote} // Fungsi untuk menghapus catatan
+          setEditingNote={setEditingNote} // Fungsi untuk menentukan catatan yang sedang diedit
         />
       )}
       // Kunci unik untuk setiap item dalam daftar

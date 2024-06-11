@@ -6,22 +6,26 @@ import Home from "./src/screens/home";
 import AddNote from "./src/screens/addNote";
 import EditNote from "./src/screens/editNote";
 
-// Komponen ini menentukan layar yang akan ditampilkan berdasarkan state currentPage.
+// Fungsi untuk memilih dan menampilkan komponen halaman yang sesuai berdasarkan nilai `currentPage`
 const CurrentPageWidget = ({
-  currentPage, // Menyimpan halaman saat ini ('home', 'add', atau 'edit')
-  noteList, // Daftar catatan yang ada
-  setCurrentPage, // Fungsi untuk mengubah halaman saat ini
-  addNote, // Fungsi untuk menambahkan catatan baru
+  currentPage, // Halaman yang saat ini aktif
+  noteList, // Daftar semua catatan
+  setCurrentPage, // Fungsi untuk mengubah halaman yang aktif
+  addNote, // Fungsi untuk menambahkan catatan
   deleteNote, // Fungsi untuk menghapus catatan
+  editNote, // Fungsi untuk mengedit catatan
+  editingNote, // Catatan yang sedang diedit
+  setEditingNote, // Fungsi untuk menentukan catatan yang sedang diedit
 }) => {
   switch (currentPage) {
     case "home":
-      // Tampilkan layar utama (Home) dengan daftar catatan dan fungsi deleteNote
+      // Tampilkan layar utama (Home) dengan daftar catatan, fungsi deleteNote, dan fungsi setEditingNote
       return (
         <Home
           noteList={noteList}
           setCurrentPage={setCurrentPage}
           deleteNote={deleteNote} // Menambahkan fungsi deleteNote sebagai prop
+          setEditingNote={setEditingNote} // Menambahkan fungsi setEditingNote sebagai prop
         />
       );
     case "add":
@@ -29,7 +33,13 @@ const CurrentPageWidget = ({
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
     case "edit":
       // Tampilkan layar untuk mengedit catatan (EditNote)
-      return <EditNote />;
+      return (
+        <EditNote
+          setCurrentPage={setCurrentPage}
+          editNote={editNote} // Menambahkan fungsi editNote sebagai prop
+          editingNote={editingNote} // Menambahkan fungsi editingNote sebagai prop
+        />
+      );
     default:
       // Default ke layar utama jika currentPage tidak dikenal
       return <Home />;
@@ -48,6 +58,9 @@ const App = () => {
       desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry", // Deskripsi catatan
     },
   ]);
+
+  // State untuk menyimpan catatan yang sedang diedit
+  const [editingNote, setEditingNote] = useState(null);
 
   // Fungsi untuk menambahkan catatan baru ke dalam daftar
   const addNote = (title, desc) => {
@@ -72,6 +85,20 @@ const App = () => {
     setNoteList(updatedNoteList);
   };
 
+  // Fungsi untuk mengedit catatan dalam daftar berdasarkan ID
+  const editNote = (id, updatedTitle, updatedDesc) => {
+    // Memperbarui catatan yang sesuai dalam daftar
+    const updatedNotes = noteList.map((note) =>
+      note.id === id
+        ? { ...note, title: updatedTitle, desc: updatedDesc }
+        : note
+    );
+    // Memperbarui state noteList dengan daftar catatan yang sudah diperbarui
+    setNoteList(updatedNotes);
+    // Kembali ke halaman utama setelah mengedit catatan
+    setCurrentPage("home");
+  };
+
   return (
     <CurrentPageWidget
       currentPage={currentPage} // Halaman yang sedang aktif
@@ -79,6 +106,9 @@ const App = () => {
       setCurrentPage={setCurrentPage} // Fungsi untuk mengubah halaman
       addNote={addNote} // Fungsi untuk menambahkan catatan
       deleteNote={deleteNote} // Fungsi untuk menghapus catatan
+      editNote={editNote} // Fungsi untuk mengedit catatan
+      editingNote={editingNote} // Catatan yang sedang diedit
+      setEditingNote={setEditingNote} // Fungsi untuk menentukan catatan yang sedang diedit
     />
   );
 };

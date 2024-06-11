@@ -1,44 +1,48 @@
-// Impor 'React' dari library React dan komponen-komponen dasar dari React Native.
-import React from "react";
-import { TextInput, Text, StyleSheet, View } from "react-native";
+import React from "react"; // Impor 'React' dari library React
+import { TextInput, StyleSheet, View, Text } from "react-native"; // Impor komponen dasar dari React Native
 
-// Definisikan komponen CustomTextInput yang menerima beberapa properti.
+// Komponen input teks kustom yang dapat digunakan untuk mengisi formulir
 const CustomTextInput = ({
-  text, // Teks default yang akan ditampilkan dalam input.
-  onChange, // Fungsi yang dipanggil saat teks input berubah.
-  label, // Label yang akan ditampilkan di atas input.
-  multiline, // Apakah input ini dapat menerima beberapa baris teks.
-  numberOfLines, // Jumlah baris default yang akan ditampilkan jika input multiline.
+  label, // Label untuk input
+  text, // Teks yang ditampilkan dalam input
+  onChange, // Fungsi untuk mengubah teks
+  placeholder, // Teks placeholder yang ditampilkan saat input kosong
+  multiline, // Apakah input mendukung banyak baris
+  numberOfLines, // Jumlah baris yang ditampilkan dalam input
 }) => {
-  // Gaya untuk wrapper input, input itu sendiri, dan label.
-  const styles = StyleSheet.create({
-    textInputWrapper: {
-      marginTop: 20, // Beri margin atas antara input dan elemen di atasnya.
-    },
-    input: {
-      borderWidth: 2, // Tambahkan garis batas pada input.
-      borderColor: "#DDD", // Warna garis batas input.
-      padding: 10, // Beri padding dalam input untuk jarak antara teks dan garis batas.
-    },
-  });
-
-  // Render wrapper input dengan label dan input teks di dalamnya.
   return (
-    <View style={styles.textInputWrapper}>
-      {/* Tampilkan label di atas input */}
-      <Text>{label}</Text>
-      {/* Tampilkan TextInput dengan properti yang ditentukan */}
+    <View style={styles.inputContainer}>
+      {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
-        multiline={multiline} // Tentukan apakah input dapat menerima beberapa baris.
-        numberOfLines={numberOfLines} // Jumlah baris default yang ditampilkan.
-        style={styles.input} // Gunakan gaya input yang telah ditentukan.
-        placeholder={label} // Gunakan label sebagai placeholder di input.
-        onChangeText={onChange} // Panggil fungsi onChange saat teks input berubah.
-        defaultValue={text} // Set nilai default dari input.
+        style={[styles.input, { height: numberOfLines * 40 }]} // Terapkan gaya input dan tentukan tinggi berdasarkan jumlah baris
+        value={text} // Set nilai input dengan teks dari props
+        onChangeText={onChange} // Panggil fungsi onChange saat teks input berubah
+        placeholder={placeholder} // Set placeholder input
+        multiline={multiline} // Tentukan apakah input dapat menerima beberapa baris
+        numberOfLines={numberOfLines} // Tentukan jumlah baris untuk input
       />
     </View>
   );
 };
 
-// Ekspor komponen CustomTextInput sebagai default export dari file ini.
-export default CustomTextInput;
+// Definisikan gaya untuk input dan label di dalamnya
+const styles = StyleSheet.create({
+  inputContainer: {
+    marginVertical: 10, // Beri margin vertikal di sekitar input
+  },
+  label: {
+    marginBottom: 5, // Beri margin bawah pada label
+    fontSize: 14, // Set ukuran font untuk label
+    color: "#203239", // Set warna teks untuk label
+  },
+  input: {
+    borderWidth: 1, // Tambahkan garis batas pada input
+    borderColor: "#ddd", // Warna garis batas input
+    borderRadius: 5, // Tambahkan sudut membulat pada input
+    padding: 10, // Beri padding dalam input untuk jarak antara teks dan garis batas
+    fontSize: 16, // Set ukuran font untuk teks input
+    textAlignVertical: "top", // Posisikan teks di bagian atas input saat multiline
+  },
+});
+
+export default CustomTextInput; // Ekspor komponen CustomTextInput sebagai default export dari file ini
