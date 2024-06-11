@@ -1,4 +1,4 @@
-// Impor React dan hook useState dari library React untuk mengelola state komponen.
+// Impor React dan hook useState dari library React.
 import React, { useState } from "react";
 
 // Impor komponen layar utama dan layar lainnya.
@@ -6,69 +6,82 @@ import Home from "./src/screens/home";
 import AddNote from "./src/screens/addNote";
 import EditNote from "./src/screens/editNote";
 
-// Komponen untuk menampilkan layar sesuai dengan halaman saat ini.
-// Menerima props untuk menentukan halaman saat ini, daftar catatan, fungsi untuk mengubah halaman, dan fungsi untuk menambah catatan.
+// Komponen ini menentukan layar yang akan ditampilkan berdasarkan state currentPage.
 const CurrentPageWidget = ({
-  currentPage, // Halaman saat ini yang sedang ditampilkan ('home', 'add', 'edit').
-  noteList, // Daftar catatan yang ada.
-  setCurrentPage, // Fungsi untuk mengubah halaman saat ini.
-  addNote, // Fungsi untuk menambahkan catatan baru.
+  currentPage, // Menyimpan halaman saat ini ('home', 'add', atau 'edit')
+  noteList, // Daftar catatan yang ada
+  setCurrentPage, // Fungsi untuk mengubah halaman saat ini
+  addNote, // Fungsi untuk menambahkan catatan baru
+  deleteNote, // Fungsi untuk menghapus catatan
 }) => {
-  // Menggunakan switch case untuk menentukan komponen mana yang akan ditampilkan berdasarkan nilai currentPage.
   switch (currentPage) {
     case "home":
-      // Menampilkan komponen Home dan meneruskan props yang diperlukan.
-      return <Home noteList={noteList} setCurrentPage={setCurrentPage} />;
+      // Tampilkan layar utama (Home) dengan daftar catatan dan fungsi deleteNote
+      return (
+        <Home
+          noteList={noteList}
+          setCurrentPage={setCurrentPage}
+          deleteNote={deleteNote} // Menambahkan fungsi deleteNote sebagai prop
+        />
+      );
     case "add":
-      // Menampilkan komponen AddNote dan meneruskan fungsi addNote dan setCurrentPage sebagai props.
+      // Tampilkan layar untuk menambahkan catatan baru (AddNote)
       return <AddNote setCurrentPage={setCurrentPage} addNote={addNote} />;
     case "edit":
-      // Menampilkan komponen EditNote (belum ada fungsi yang dikaitkan).
+      // Tampilkan layar untuk mengedit catatan (EditNote)
       return <EditNote />;
     default:
-      // Menampilkan komponen Home sebagai fallback jika currentPage tidak dikenal.
+      // Default ke layar utama jika currentPage tidak dikenal
       return <Home />;
   }
 };
 
 const App = () => {
-  // State untuk mengelola halaman saat ini. Defaultnya adalah 'home'.
+  // State untuk menyimpan halaman yang sedang ditampilkan
   const [currentPage, setCurrentPage] = useState("home");
 
-  // State untuk mengelola daftar catatan. Inisialisasi dengan satu catatan.
+  // State untuk menyimpan daftar catatan
   const [noteList, setNoteList] = useState([
     {
-      id: 1, // ID unik untuk setiap catatan.
-      title: "Note pertama", // Judul catatan.
-      desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry", // Deskripsi catatan.
+      id: 1, // ID unik untuk catatan
+      title: "Note pertama", // Judul catatan
+      desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry", // Deskripsi catatan
     },
   ]);
 
-  // Fungsi untuk menambahkan catatan baru ke dalam daftar.
+  // Fungsi untuk menambahkan catatan baru ke dalam daftar
   const addNote = (title, desc) => {
-    // Menghasilkan ID baru untuk catatan berdasarkan ID catatan terakhir.
+    // Tentukan ID baru untuk catatan, increment dari ID terakhir atau 1 jika kosong
     const id = noteList.length > 0 ? noteList[noteList.length - 1].id + 1 : 1;
-    // Menambahkan catatan baru ke daftar dengan menggunakan nilai yang sudah ada dan nilai baru.
+    // Tambahkan catatan baru ke dalam daftar
     setNoteList([
       ...noteList,
       {
-        id, // ID unik untuk catatan baru.
-        title: title, // Judul catatan baru.
-        desc: desc, // Deskripsi catatan baru.
+        id, // ID unik catatan baru
+        title, // Judul catatan baru
+        desc, // Deskripsi catatan baru
       },
     ]);
   };
 
-  // Menampilkan CurrentPageWidget dengan meneruskan state dan fungsi yang diperlukan sebagai props.
+  // Fungsi untuk menghapus catatan berdasarkan ID
+  const deleteNote = (id) => {
+    // Filter daftar catatan untuk menghapus catatan yang sesuai dengan ID
+    const updatedNoteList = noteList.filter((note) => note.id !== id);
+    // Perbarui state dengan daftar catatan yang sudah difilter
+    setNoteList(updatedNoteList);
+  };
+
   return (
     <CurrentPageWidget
-      currentPage={currentPage}
-      noteList={noteList}
-      setCurrentPage={setCurrentPage}
-      addNote={addNote}
+      currentPage={currentPage} // Halaman yang sedang aktif
+      noteList={noteList} // Daftar catatan yang ada
+      setCurrentPage={setCurrentPage} // Fungsi untuk mengubah halaman
+      addNote={addNote} // Fungsi untuk menambahkan catatan
+      deleteNote={deleteNote} // Fungsi untuk menghapus catatan
     />
   );
 };
 
-// Mengekspor komponen App sebagai default export dari file ini.
+// Ekspor komponen App sebagai default export
 export default App;
