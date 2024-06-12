@@ -1,99 +1,99 @@
-import React, { useState, useEffect } from "react"; // Mengimpor React, useState, dan useEffect dari React
-import { View, StyleSheet, Text } from "react-native"; // Mengimpor komponen dasar dari React Native
-import CustomButton from "../components/customButton"; // Mengimpor komponen CustomButton
-import CustomTextInput from "../components/customTextInput"; // Mengimpor komponen CustomTextInput
+// Impor React dan hook useState dari library React.
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 
-// Komponen EditNote untuk mengubah catatan
-const EditNote = ({ editingNote, setCurrentPage, editNote }) => {
-  // State untuk menyimpan judul catatan yang sedang diedit
-  const [title, setTitle] = useState(editingNote?.title || "");
-  // State untuk menyimpan deskripsi catatan yang sedang diedit
-  const [desc, setDesc] = useState(editingNote?.desc || "");
+// Impor komponen kustom untuk tombol dari folder components.
+import CustomButton from "../components/customButton";
 
+// Komponen utama untuk halaman EditNote yang memungkinkan pengguna mengedit catatan yang sudah ada
+const EditNote = ({ setCurrentPage, editNote, editingNote }) => {
+  // State untuk menyimpan judul dan deskripsi catatan yang sedang diedit
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+
+  // Gunakan useEffect untuk mengisi state dengan data catatan yang sedang diedit ketika komponen dimuat
   useEffect(() => {
-    // Mengisi state dengan data catatan yang sedang diedit saat komponen pertama kali di-render
     if (editingNote) {
       setTitle(editingNote.title);
       setDesc(editingNote.desc);
     }
   }, [editingNote]);
 
-  // Fungsi untuk menyimpan perubahan yang telah dilakukan pada catatan
-  const handleSave = () => {
-    if (editingNote) {
-      editNote(editingNote.id, title, desc); // Memanggil fungsi editNote untuk menyimpan perubahan
-      setCurrentPage("home"); // Kembali ke halaman utama setelah menyimpan
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      {/* Judul halaman edit note */}
-      <Text style={styles.pageTitle}>Ubah Note</Text>
-
-      {/* Input untuk mengubah judul catatan */}
-      <CustomTextInput
-        text={title}
-        onChange={setTitle}
-        label="Judul"
-        placeholder="Judul"
-        numberOfLines={1}
-        multiline={false}
-      />
-
-      {/* Input untuk mengubah deskripsi catatan */}
-      <CustomTextInput
-        text={desc}
-        onChange={setDesc}
-        label="Deskripsi"
-        placeholder="Deskripsi"
-        multiline
-        numberOfLines={4}
-      />
-
-      {/* Tombol untuk menyimpan perubahan */}
-      <View style={styles.spacerTop}>
+    // KeyboardAvoidingView untuk memastikan keyboard tidak menutupi input saat muncul
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      {/* ScrollView untuk memungkinkan scroll jika konten sangat panjang */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Input untuk judul catatan */}
+        <TextInput
+          placeholder="Masukkan Judul" // Placeholder untuk input
+          value={title} // Nilai saat ini dari judul
+          onChangeText={setTitle} // Fungsi untuk mengubah nilai judul
+          style={styles.input} // Gaya untuk input
+        />
+        {/* Input untuk deskripsi catatan */}
+        <TextInput
+          placeholder="Masukkan Deskripsi" // Placeholder untuk input
+          value={desc} // Nilai saat ini dari deskripsi
+          onChangeText={setDesc} // Fungsi untuk mengubah nilai deskripsi
+          style={styles.textArea} // Gaya untuk input dengan tinggi khusus
+          multiline // Izinkan input multi-baris
+        />
+      </ScrollView>
+      {/* View untuk tombol yang tetap berada di bagian bawah */}
+      <View style={styles.buttonContainer}>
+        {/* Tombol untuk menyimpan perubahan catatan */}
         <CustomButton
-          backgroundColor="#247881"
-          color="#fff"
-          text="Simpan"
-          width="100%"
-          onPress={handleSave} // Simpan perubahan saat tombol diklik
+          text="Simpan" // Teks tombol
+          onPress={() => {
+            editNote(editingNote.id, title, desc); // Simpan perubahan dengan data catatan saat ini
+            setCurrentPage("home"); // Kembali ke halaman utama setelah menyimpan perubahan
+          }}
+        />
+        {/* Tombol untuk membatalkan dan kembali ke halaman utama */}
+        <CustomButton
+          text="Batal" // Teks tombol
+          onPress={() => setCurrentPage("home")} // Kembali ke halaman utama saat tombol ditekan
+          backgroundColor="#D82148" // Warna latar belakang tombol
         />
       </View>
-
-      {/* Tombol untuk kembali ke halaman utama tanpa menyimpan perubahan */}
-      <View style={styles.spacerTop}>
-        <CustomButton
-          backgroundColor="#DDDDDD"
-          color="#203239"
-          text="Kembali ke Home"
-          width="100%"
-          onPress={() => setCurrentPage("home")} // Kembali ke halaman utama saat tombol diklik
-        />
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
-// Gaya (styles) untuk komponen-komponen di halaman EditNote
+// Gaya untuk halaman EditNote dan komponen input
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    padding: 20,
+    flex: 1, // Komponen mengambil seluruh ruang yang tersedia
+    padding: 16, // Jarak dari tepi kontainer
   },
-  pageTitle: {
-    marginTop: 20,
-    fontSize: 20,
-    fontWeight: "700",
-    textAlign: "center",
-    color: "#203239",
+  scrollContainer: {
+    flexGrow: 1, // Membuat ScrollView mengambil ruang yang tersedia
+    justifyContent: "center", // Menempatkan konten di tengah secara vertikal
   },
-  spacerTop: {
-    marginTop: 30,
+  input: {
+    backgroundColor: "#EDEDED", // Warna latar belakang input
+    padding: 16, // Padding dalam input
+    marginBottom: 16, // Margin bawah antara input
+    borderRadius: 8, // Sudut input yang melengkung
+  },
+  textArea: {
+    backgroundColor: "#EDEDED", // Warna latar belakang input
+    padding: 16, // Padding dalam input
+    borderRadius: 8, // Sudut input yang melengkung
+    flex: 1, // Membuat TextInput mengambil ruang yang tersisa
+    textAlignVertical: "top", // Mengatur teks berada di atas
+  },
+  buttonContainer: {
+    marginTop: 16, // Margin atas antara tombol dan input
   },
 });
 
-export default EditNote; // Ekspor komponen EditNote sebagai default export dari file ini
+// Ekspor komponen EditNote sebagai default export
+export default EditNote;

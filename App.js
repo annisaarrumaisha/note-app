@@ -16,6 +16,8 @@ const CurrentPageWidget = ({
   editNote, // Fungsi untuk mengedit catatan
   editingNote, // Catatan yang sedang diedit
   setEditingNote, // Fungsi untuk menentukan catatan yang sedang diedit
+  searchQuery, // Query pencarian
+  setSearchQuery, // Fungsi untuk mengubah query pencarian
 }) => {
   switch (currentPage) {
     case "home":
@@ -24,8 +26,10 @@ const CurrentPageWidget = ({
         <Home
           noteList={noteList}
           setCurrentPage={setCurrentPage}
-          deleteNote={deleteNote} // Menambahkan fungsi deleteNote sebagai prop
-          setEditingNote={setEditingNote} // Menambahkan fungsi setEditingNote sebagai prop
+          deleteNote={deleteNote}
+          setEditingNote={setEditingNote}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
       );
     case "add":
@@ -36,8 +40,8 @@ const CurrentPageWidget = ({
       return (
         <EditNote
           setCurrentPage={setCurrentPage}
-          editNote={editNote} // Menambahkan fungsi editNote sebagai prop
-          editingNote={editingNote} // Menambahkan fungsi editingNote sebagai prop
+          editNote={editNote}
+          editingNote={editingNote}
         />
       );
     default:
@@ -61,6 +65,9 @@ const App = () => {
 
   // State untuk menyimpan catatan yang sedang diedit
   const [editingNote, setEditingNote] = useState(null);
+
+  // State untuk menyimpan query pencarian
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fungsi untuk menambahkan catatan baru ke dalam daftar
   const addNote = (title, desc) => {
@@ -109,6 +116,8 @@ const App = () => {
       editNote={editNote} // Fungsi untuk mengedit catatan
       editingNote={editingNote} // Catatan yang sedang diedit
       setEditingNote={setEditingNote} // Fungsi untuk menentukan catatan yang sedang diedit
+      searchQuery={searchQuery} // Query pencarian
+      setSearchQuery={setSearchQuery} // Fungsi untuk mengubah query pencarian
     />
   );
 };
