@@ -1,94 +1,91 @@
 // Impor React dan hook useState dari library React.
 import React, { useState } from "react";
-// Impor komponen-komponen dasar dari React Native.
-import { View, StyleSheet, Text } from "react-native";
-// Impor komponen kustom untuk tombol dan input teks.
-import CustomButton from "../components/customButton";
-import CustomTextInput from "../components/customTextInput";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 
-// Komponen AddNote menerima dua props:
-// 1. setCurrentPage - fungsi untuk mengubah halaman saat ini.
-// 2. addNote - fungsi untuk menambahkan catatan baru ke dalam daftar.
+// Impor komponen kustom untuk tombol dari folder components.
+import CustomButton from "../components/customButton";
+
+// Komponen utama untuk halaman AddNote yang memungkinkan pengguna menambahkan catatan baru
 const AddNote = ({ setCurrentPage, addNote }) => {
-  // State untuk menyimpan nilai input judul dan deskripsi yang diisi oleh pengguna.
+  // State untuk menyimpan judul dan deskripsi catatan yang akan ditambahkan
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
 
   return (
-    // Container utama yang mengatur layout komponen anak.
-    <View style={styles.container}>
-      {/* Teks judul halaman "Tambahkan Note" */}
-      <Text style={styles.pageTitle}>Tambahkan Note</Text>
-
-      {/* Komponen input teks untuk judul catatan */}
-      <CustomTextInput
-        text={title} // Nilai dari input teks untuk judul.
-        onChange={setTitle} // Fungsi untuk mengubah state judul ketika teks berubah.
-        label="Judul" // Label yang ditampilkan di atas input teks.
-        placeholder="Judul" // Placeholder untuk input teks.
-        numberOfLines={1} // Jumlah baris input (1 baris).
-        multiline={false} // Input teks tidak mendukung beberapa baris.
-      />
-
-      {/* Komponen input teks untuk deskripsi catatan */}
-      <CustomTextInput
-        text={desc} // Nilai dari input teks untuk deskripsi.
-        onChange={setDesc} // Fungsi untuk mengubah state deskripsi ketika teks berubah.
-        label="Deskripsi" // Label yang ditampilkan di atas input teks.
-        placeholder="Deskripsi" // Placeholder untuk input teks.
-        multiline // Input teks mendukung beberapa baris.
-        numberOfLines={4} // Jumlah baris input (4 baris).
-      />
-
-      {/* Tombol "Simpan" untuk menambahkan catatan */}
-      <View style={styles.spacerTop}>
+    // KeyboardAvoidingView untuk memastikan keyboard tidak menutupi input saat muncul
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      {/* ScrollView untuk memungkinkan scroll jika konten sangat panjang */}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Input untuk judul catatan */}
+        <TextInput
+          placeholder="Masukkan Judul" // Placeholder untuk input
+          value={title} // Nilai saat ini dari judul
+          onChangeText={setTitle} // Fungsi untuk mengubah nilai judul
+          style={styles.input} // Gaya untuk input
+        />
+        {/* Input untuk deskripsi catatan */}
+        <TextInput
+          placeholder="Masukkan Deskripsi" // Placeholder untuk input
+          value={desc} // Nilai saat ini dari deskripsi
+          onChangeText={setDesc} // Fungsi untuk mengubah nilai deskripsi
+          style={styles.textArea} // Gaya untuk input dengan tinggi khusus
+          multiline // Izinkan input multi-baris
+        />
+      </ScrollView>
+      {/* View untuk tombol yang tetap berada di bagian bawah */}
+      <View style={styles.buttonContainer}>
+        {/* Tombol untuk menambahkan catatan baru */}
         <CustomButton
-          backgroundColor="#247881" // Warna latar belakang tombol.
-          color="#fff" // Warna teks tombol.
-          text="Simpan" // Teks yang ditampilkan di tombol.
-          width="100%" // Lebar tombol.
-          // Ketika tombol ditekan, jalankan fungsi addNote dan kembali ke halaman home.
+          text="Simpan" // Teks tombol
           onPress={() => {
-            addNote(title, desc); // Panggil fungsi addNote dengan judul dan deskripsi yang diberikan.
-            setCurrentPage("home"); // Ubah halaman saat ini menjadi "home".
+            addNote(title, desc); // Tambahkan catatan dengan judul dan deskripsi saat ini
+            setCurrentPage("home"); // Kembali ke halaman utama setelah menambahkan catatan
           }}
         />
-      </View>
-
-      {/* Tombol "Kembali ke Home" untuk kembali ke halaman utama */}
-      <View style={styles.spacerTop}>
+        {/* Tombol untuk membatalkan dan kembali ke halaman utama */}
         <CustomButton
-          backgroundColor="#DDDDDD" // Warna latar belakang tombol.
-          color="#203239" // Warna teks tombol.
-          text="Kembali ke Home" // Teks yang ditampilkan di tombol.
-          width="100%" // Lebar tombol.
-          // Ketika tombol ditekan, ubah halaman saat ini menjadi "home".
-          onPress={() => setCurrentPage("home")}
+          text="Batal" // Teks tombol
+          onPress={() => setCurrentPage("home")} // Kembali ke halaman utama saat tombol ditekan
+          backgroundColor="#D82148" // Warna latar belakang tombol
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
-// Gaya untuk komponen di dalam file ini.
+// Gaya untuk halaman AddNote dan komponen input
 const styles = StyleSheet.create({
   container: {
-    display: "flex", // Gunakan flexbox untuk tata letak.
-    flexDirection: "column", // Atur komponen anak secara vertikal.
-    justifyContent: "center", // Pusatkan komponen anak secara vertikal.
-    padding: 20, // Beri padding di sekitar container.
+    flex: 1, // Komponen mengambil seluruh ruang yang tersedia
+    padding: 16, // Jarak dari tepi kontainer
   },
-  pageTitle: {
-    marginTop: 20, // Jarak atas antara tepi container dan teks judul.
-    fontSize: 20, // Ukuran font untuk teks judul.
-    fontWeight: "700", // Berat font untuk teks judul.
-    textAlign: "center", // Posisikan teks judul di tengah secara horizontal.
-    color: "#203239", // Warna teks untuk teks judul.
+  scrollContainer: {
+    flexGrow: 1, // Membuat ScrollView mengambil ruang yang tersedia
+    justifyContent: "center", // Menempatkan konten di tengah secara vertikal
   },
-  spacerTop: {
-    marginTop: 30, // Jarak atas antara elemen di atas dan elemen ini.
+  input: {
+    backgroundColor: "#EDEDED", // Warna latar belakang input
+    padding: 16, // Padding dalam input
+    marginBottom: 16, // Margin bawah antara input
+    borderRadius: 8, // Sudut input yang melengkung
+  },
+  textArea: {
+    backgroundColor: "#EDEDED", // Warna latar belakang input
+    padding: 16, // Padding dalam input
+    borderRadius: 8, // Sudut input yang melengkung
+    flex: 1, // Membuat TextInput mengambil ruang yang tersisa
+    textAlignVertical: "top", // Mengatur teks berada di atas
+  },
+  buttonContainer: {
+    marginTop: 16, // Margin atas antara tombol dan input
   },
 });
 
-// Ekspor komponen AddNote sebagai default export dari file ini.
+// Ekspor komponen AddNote sebagai default export
 export default AddNote;

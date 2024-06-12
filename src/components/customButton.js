@@ -1,30 +1,40 @@
-import React from "react"; // Impor 'React' dari library React
-import { TouchableOpacity, Text, StyleSheet } from "react-native"; // Impor komponen dasar dari React Native
+// Impor React dari library React dan komponen dasar dari React Native
+import React from "react";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-// Komponen tombol kustom yang dapat digunakan untuk berbagai fungsi
-const CustomButton = ({ backgroundColor, color, text, width, onPress }) => {
-  // Mengembalikan tombol dengan gaya dan fungsi yang ditentukan
+// Komponen CustomButton untuk membuat tombol kustom
+const CustomButton = ({
+  text, // Teks yang akan ditampilkan pada tombol
+  onPress, // Fungsi yang akan dijalankan saat tombol ditekan
+  backgroundColor = "#007BFF", // Warna latar belakang tombol (default: biru)
+  color = "#FFFFFF", // Warna teks tombol (default: putih)
+  fontSize = 14, // Ukuran teks tombol (default: 16)
+  width = "100%", // Lebar tombol (default: 100% dari kontainer)
+}) => {
   return (
+    // TouchableOpacity digunakan untuk membuat tombol yang dapat ditekan
     <TouchableOpacity
-      style={[styles.button, { backgroundColor, width }]} // Terapkan gaya tombol dan tambahkan warna latar belakang serta lebar dari props
-      onPress={onPress} // Panggil fungsi onPress saat tombol ditekan
+      style={[styles.button, { backgroundColor, width }]} // Gaya tombol, termasuk warna latar dan lebar
+      onPress={onPress} // Fungsi yang dijalankan saat tombol ditekan
     >
-      <Text style={[styles.buttonText, { color }]}>{text}</Text>
+      {/* Tampilkan teks pada tombol */}
+      <Text style={[styles.buttonText, { color, fontSize }]}>{text}</Text>
     </TouchableOpacity>
   );
 };
 
-// Definisikan gaya untuk tombol dan teks di dalamnya
+// Gaya untuk tombol dan teks tombol
 const styles = StyleSheet.create({
   button: {
-    padding: 10, // Beri padding di sekitar teks tombol
-    borderRadius: 5, // Tambahkan sudut membulat pada tombol
-    alignItems: "center", // Pusatkan teks di dalam tombol secara horizontal
+    padding: 10, // Padding dalam tombol
+    borderRadius: 5, // Sudut tombol yang melengkung
+    alignItems: "center", // Teks di tengah secara horizontal
+    marginVertical: 5, // Margin vertikal antara tombol
   },
   buttonText: {
-    fontSize: 16, // Ukuran font untuk teks tombol
-    fontWeight: "600", // Atur berat font menjadi semi-bold
+    fontWeight: "bold", // Teks dicetak tebal
   },
 });
 
-export default CustomButton; // Ekspor komponen CustomButton sebagai default export dari file ini
+// Ekspor komponen CustomButton sebagai default export
+export default CustomButton;
